@@ -1,0 +1,11 @@
+services:
+  homepage:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PORT=80
+      - NODE_ENV=production
