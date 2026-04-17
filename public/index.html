@@ -1,479 +1,850 @@
 <!DOCTYPE html>
-<html lang="en" id="root">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Lions Alliance — Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Lions Alliance — A Creative Experience Studio</title>
+  <meta name="description" content="The Lions Alliance creates immersive, story-driven experiences that people remember. From intimate wedding moments to large-scale interactive worlds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ── Design tokens (mirrors thelionsalliance.com) ── */
+    /* ═══════════════════════════════════════════════
+       THE LIONS ALLIANCE — UNIFIED STYLE SYSTEM v1
+       ═══════════════════════════════════════════════ */
+
     :root {
-      --bg:               #0b0b0f;
-      --bg-elevated:      #17171f;
-      --bg-input:         #1e1e28;
-      --border:           #2a2a35;
-      --border-hover:     #3a3a48;
-      --accent:           #4ade80;
-      --accent-dim:       #16a34a;
-      --accent-soft:      rgba(74, 222, 128, 0.12);
-      --fg:               #f5f5f7;
-      --fg-muted:         #9a9aaa;
-      --radius:           14px;
-      --radius-sm:        8px;
-      --radius-pill:      999px;
-      --shadow-card:      0 4px 20px rgba(0,0,0,0.35);
-      --shadow-hover:     0 12px 36px rgba(0,0,0,0.55);
-      --transition:       0.15s ease;
+      --bg-ivory:         #FAF8F4;
+      --bg-stone:         #F0EAE1;
+      --bg-warm-white:    #FFFFFF;
+      --bg-charcoal:      #18160F;
+      --bg-charcoal-mid:  #211E15;
+      --bg-charcoal-soft: #2C2820;
+      --gold:             #C4913A;
+      --gold-light:       #D4A853;
+      --gold-dim:         #8B6626;
+      --gold-subtle:      rgba(196,145,58,0.12);
+      --gold-glow:        rgba(196,145,58,0.25);
+      --text-dark:        #1A1714;
+      --text-body:        #3D3830;
+      --text-muted:       #7A7268;
+      --text-light:       #F5F0E8;
+      --text-light-muted: #B8AD9C;
+      --border-light:     #E8E0D6;
+      --border-mid:       #D4C9BA;
+      --border-dark:      #3A3428;
+      --border-gold:      rgba(196,145,58,0.35);
+      --badge-live-bg:    rgba(196,145,58,0.14);
+      --badge-live-bd:    rgba(196,145,58,0.40);
+      --badge-live-text:  #9B7230;
+      --badge-dev-bg:     rgba(94,104,118,0.10);
+      --badge-dev-bd:     rgba(94,104,118,0.30);
+      --badge-dev-text:   #5E6876;
+      --badge-fut-bg:     rgba(138,120,98,0.10);
+      --badge-fut-bd:     rgba(138,120,98,0.25);
+      --badge-fut-text:   #8A7862;
+      --radius-sm: 6px; --radius-md: 12px; --radius-lg: 18px; --radius-xl: 24px;
+      --shadow-sm: 0 1px 4px rgba(30,24,14,0.06);
+      --shadow-md: 0 4px 16px rgba(30,24,14,0.10);
+      --shadow-lg: 0 12px 40px rgba(30,24,14,0.14);
+      --shadow-xl: 0 24px 64px rgba(30,24,14,0.18);
+      --ease: 0.22s ease; --ease-slow: 0.38s ease;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    html { scroll-behavior: smooth; }
     body {
-      background: radial-gradient(ellipse at top, #1a1a26 0%, #050509 55%, #000 100%);
-      min-height: 100vh;
-      color: var(--fg);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
+      background: var(--bg-ivory);
+      color: var(--text-body);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
     }
-
-    /* ── Layout ── */
-    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-
-    /* ── Header ── */
-    header {
-      border-bottom: 1px solid var(--border);
-      background: rgba(11,11,15,0.85);
-      backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 10;
+    h1,h2,h3,h4 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      color: var(--text-dark); line-height: 1.1; letter-spacing: -0.02em;
     }
-    header .container {
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+
+    /* ── Navigation ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 40px;
+      transition: background var(--ease-slow), box-shadow var(--ease-slow);
+    }
+    .nav.scrolled {
+      background: rgba(250,248,244,0.94);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 var(--border-light);
+    }
+    .nav__inner {
+      max-width: 1160px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
-      height: 60px;
+      height: 68px;
     }
-    .logo {
-      font-size: 1.05rem; font-weight: 700; color: var(--fg);
-      text-decoration: none; letter-spacing: -0.3px;
+    .nav__logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 600;
+      color: var(--text-dark); text-decoration: none; letter-spacing: 0.02em;
     }
-    .logo span { color: var(--accent); }
+    .nav__logo span { color: var(--gold); }
+    .nav__links { display: flex; align-items: center; gap: 40px; list-style: none; }
+    .nav__links a {
+      font-size: 0.875rem; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; transition: color var(--ease); letter-spacing: 0.02em;
+    }
+    .nav__links a:hover { color: var(--text-dark); }
+    .nav__cta {
+      display: inline-flex; align-items: center;
+      background: var(--text-dark); color: var(--text-light);
+      padding: 10px 22px; border-radius: var(--radius-sm);
+      font-size: 0.875rem; font-weight: 600;
+      text-decoration: none; letter-spacing: 0.02em;
+      transition: background var(--ease), transform var(--ease);
+    }
+    .nav__cta:hover { background: var(--gold); transform: translateY(-1px); }
 
-    /* ── Hero ── */
-    .hero {
-      text-align: center; padding: 64px 24px 48px;
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.925rem; font-weight: 600;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: all var(--ease); letter-spacing: 0.02em;
     }
-    .hero-badge {
-      display: inline-block;
-      border: 1px solid var(--border);
-      background: var(--accent-soft);
-      color: var(--accent);
+    .btn--primary { background: var(--text-dark); color: var(--text-light); }
+    .btn--primary:hover { background: var(--gold); color: var(--text-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn--outline { background: transparent; border: 1.5px solid var(--border-mid); color: var(--text-body); }
+    .btn--outline:hover { border-color: var(--text-dark); color: var(--text-dark); transform: translateY(-2px); }
+    .btn--gold { background: var(--gold); color: var(--bg-ivory); }
+    .btn--gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px var(--gold-glow); }
+    .btn--ghost { background: transparent; color: var(--text-light-muted); border: 1.5px solid rgba(255,255,255,0.18); }
+    .btn--ghost:hover { border-color: rgba(255,255,255,0.4); color: var(--text-light); transform: translateY(-2px); }
+    .btn--muted { background: transparent; border: 1.5px solid var(--border-light); color: var(--text-muted); cursor: default; }
+    .btn--sm { padding: 9px 20px; font-size: 0.85rem; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 999px;
       font-size: 0.72rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.14em;
-      padding: 4px 14px; border-radius: var(--radius-pill);
-      margin-bottom: 22px;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      border-width: 1px; border-style: solid;
     }
-    .hero h1 {
-      font-size: clamp(1.9rem, 5vw, 3rem);
-      font-weight: 700; line-height: 1.1;
-      letter-spacing: -0.5px; margin-bottom: 14px;
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .badge--live { background: var(--badge-live-bg); border-color: var(--badge-live-bd); color: var(--badge-live-text); }
+    .badge--live::before { background: var(--gold); box-shadow: 0 0 5px var(--gold); }
+    .badge--dev { background: var(--badge-dev-bg); border-color: var(--badge-dev-bd); color: var(--badge-dev-text); }
+    .badge--dev::before { background: var(--badge-dev-text); }
+    .badge--future { background: var(--badge-fut-bg); border-color: var(--badge-fut-bd); color: var(--badge-fut-text); }
+    .badge--future::before { background: var(--badge-fut-text); }
+
+    /* ── Section header ── */
+    .section-header { text-align: center; margin-bottom: 96px; }
+    .section-header .overline {
+      display: block; font-family: 'Inter', sans-serif;
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
     }
-    .hero h1 .accent { color: var(--accent); }
-    .hero p {
-      font-size: 1rem; color: var(--fg-muted);
-      max-width: 400px; margin: 0 auto 32px;
-    }
-    .hero-divider {
-      width: 44px; height: 3px;
-      background: linear-gradient(90deg, var(--accent-dim), var(--accent));
-      border-radius: var(--radius-pill); margin: 0 auto 48px;
+    .section-header p { color: var(--text-muted); max-width: 580px; margin: 0 auto; font-size: 1.05rem; line-height: 1.7; }
+    .divider {
+      width: 48px; height: 2px;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+      border-radius: 2px; margin: 24px auto 0;
     }
 
-    /* ── Status dot ── */
-    .status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #4b4b5a; flex-shrink: 0;
-      transition: background var(--transition);
+    /* ══════════ HERO ══════════ */
+    .hero {
+      min-height: 100vh;
+      background: var(--bg-charcoal);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 40px 128px;
+      position: relative; overflow: hidden;
     }
-    .status-dot.online  { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-    .status-dot.offline { background: #ef4444; }
-
-    /* ── Service cards grid ── */
-    #cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 48px;
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(196,145,58,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 70%, rgba(196,145,58,0.05) 0%, transparent 50%);
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
+      background: linear-gradient(to bottom, transparent, rgba(24,22,15,0.6));
+    }
+    .hero-grain {
+      position: absolute; inset: 0; opacity: 0.025; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+    .hero__content { position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; width: 100%; }
+    .hero__eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-bottom: 40px;
+      color: var(--gold); font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .hero__eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--gold); opacity: 0.7; }
+    .hero__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 8vw, 6.5rem);
+      font-weight: 500; line-height: 1.05; letter-spacing: -0.03em;
+      color: var(--text-light); max-width: 900px; margin-bottom: 40px;
+    }
+    .hero__title em { font-style: italic; color: var(--gold-light); }
+    .hero__subtitle {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      color: var(--text-light-muted); max-width: 540px;
+      line-height: 1.7; margin-bottom: 64px; font-weight: 300;
+    }
+    .hero__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .hero__scroll {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--text-light-muted); font-size: 0.72rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+    }
+    .hero__scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    @keyframes scroll-pulse {
+      0%,100% { opacity: 0.5; } 50% { opacity: 1; }
     }
 
-    .service-card {
-      position: relative;
+    /* ══════════ STUDIO STATEMENT ══════════ */
+    .studio-statement { background: var(--bg-ivory); padding: 128px 40px; }
+    .studio-statement__inner {
+      max-width: 960px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: start;
+    }
+    .studio-statement__label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
+    }
+    .studio-statement__heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 500; line-height: 1.15; letter-spacing: -0.02em;
+      color: var(--text-dark); margin-bottom: 24px;
+    }
+    .studio-statement__text { color: var(--text-muted); line-height: 1.8; font-size: 1.025rem; }
+    .studio-statement__text + .studio-statement__text { margin-top: 16px; }
+    .phase-list { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+    .phase-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 20px 24px; border: 1px solid var(--border-light);
+      border-radius: var(--radius-md); background: var(--bg-warm-white);
+      box-shadow: var(--shadow-sm);
+      transition: border-color var(--ease), box-shadow var(--ease);
+    }
+    .phase-item:hover { border-color: var(--border-gold); box-shadow: var(--shadow-md); }
+    .phase-item--active { border-color: var(--border-gold); }
+    .phase-item__num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 600; color: var(--border-light); line-height: 1; min-width: 40px; margin-top: -4px;
+    }
+    .phase-item--active .phase-item__num { color: var(--gold); }
+    .phase-item__label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+    }
+    .phase-item--active .phase-item__label { color: var(--gold-dim); }
+    .phase-item__name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 500; color: var(--text-dark); line-height: 1.2;
+    }
+
+    /* ══════════ PILLARS ══════════ */
+    .pillars { background: var(--bg-stone); padding: 128px 40px; }
+    .pillars__grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; margin-top: 64px;
+    }
+    .pillar-card {
+      background: var(--bg-warm-white); border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg); padding: 40px 32px;
       display: flex; flex-direction: column;
-      padding: 22px 22px 18px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
-      text-decoration: none; color: var(--fg);
-      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--ease-slow), box-shadow var(--ease-slow), border-color var(--ease-slow);
+      position: relative; overflow: hidden;
     }
-    .service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
-      border-color: var(--card-accent, var(--accent));
+    .pillar-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--border-light); transition: background var(--ease-slow);
     }
-    .service-card .card-top {
-      display: flex; align-items: center;
-      justify-content: space-between; margin-bottom: 14px;
+    .pillar-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+    .pillar-card--live { border-color: var(--border-gold); }
+    .pillar-card--live::before { background: linear-gradient(90deg, var(--gold-dim), var(--gold-light)); }
+    .pillar-card--live:hover { border-color: var(--gold); }
+    .pillar-card__badge { margin-bottom: 32px; }
+    .pillar-card__number {
+      font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300;
+      color: var(--border-light); line-height: 1; margin-bottom: 8px;
     }
-    .card-icon {
-      font-size: 1.75rem; line-height: 1;
-      width: 46px; height: 46px;
+    .pillar-card--live .pillar-card__number { color: rgba(196,145,58,0.25); }
+    .pillar-card__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 500; color: var(--text-dark); margin-bottom: 8px;
+    }
+    .pillar-card__tagline {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold-dim); margin-bottom: 20px;
+    }
+    .pillar-card__desc {
+      color: var(--text-muted); line-height: 1.75; font-size: 0.95rem; flex: 1; margin-bottom: 24px;
+    }
+    .pillar-card__projects { margin-bottom: 24px; }
+    .project-mention {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; background: var(--bg-ivory);
+      border: 1px solid var(--border-light); border-radius: var(--radius-sm);
+      font-size: 0.85rem; color: var(--text-body); margin-bottom: 8px;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot--live   { background: var(--gold); }
+    .dot--dev    { background: var(--badge-dev-text); opacity: 0.7; }
+    .dot--future { background: var(--badge-fut-text); opacity: 0.5; }
+    .pillar-card__cta { margin-top: auto; }
+
+    /* ══════════ FEATURED ══════════ */
+    .featured { background: var(--bg-ivory); padding: 128px 40px; }
+    .featured__inner {
+      max-width: 1160px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: center;
+    }
+    .featured__visual {
+      border-radius: var(--radius-xl); overflow: hidden;
+      aspect-ratio: 4/3; background: var(--bg-charcoal);
+      position: relative; box-shadow: var(--shadow-xl);
+    }
+    .featured__visual-fill {
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse 70% 60% at 40% 35%, rgba(196,145,58,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 70% at 75% 70%, rgba(196,145,58,0.10) 0%, transparent 50%),
+        linear-gradient(160deg, #211E15 0%, #0e0c08 100%);
       display: flex; align-items: center; justify-content: center;
-      background: var(--icon-bg, var(--accent-soft));
-      border-radius: var(--radius-sm);
     }
-    .card-actions { display: flex; gap: 6px; opacity: 0; transition: opacity var(--transition); }
-    .service-card:hover .card-actions { opacity: 1; }
-    .card-action-btn {
-      background: none; border: 1px solid var(--border-hover);
-      color: var(--fg-muted); border-radius: 6px;
-      width: 26px; height: 26px; cursor: pointer; font-size: 0.75rem;
+    .featured__visual-mark {
+      font-family: 'Cormorant Garamond', serif; font-size: 6rem; font-weight: 300;
+      color: rgba(196,145,58,0.35); letter-spacing: -0.04em; user-select: none;
+    }
+    .featured__tag { position: absolute; top: 24px; left: 24px; }
+    .featured__overline {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+    }
+    .featured__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 500; line-height: 1.15;
+      color: var(--text-dark); margin-bottom: 24px;
+    }
+    .featured__desc { color: var(--text-muted); line-height: 1.8; font-size: 1rem; margin-bottom: 32px; }
+    .feature-points { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+    .feature-point { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9rem; color: var(--text-body); }
+    .feature-point::before { content: '—'; color: var(--gold); flex-shrink: 0; font-weight: 300; }
+    .featured__actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* ══════════ ROADMAP ══════════ */
+    .roadmap { background: var(--bg-charcoal); padding: 128px 40px; }
+    .roadmap .section-header .overline { color: var(--gold); }
+    .roadmap .section-header h2 { color: var(--text-light); }
+    .roadmap .section-header p { color: var(--text-light-muted); }
+    .roadmap .divider { background: linear-gradient(90deg, var(--gold-dim), var(--gold)); }
+    .roadmap__track {
+      position: relative; max-width: 900px; margin: 0 auto;
+      display: flex; flex-direction: column;
+    }
+    .roadmap__track::before {
+      content: ''; position: absolute; left: 27px; top: 20px; bottom: 20px; width: 1px;
+      background: linear-gradient(to bottom, var(--gold) 0%, var(--border-dark) 33%, var(--border-dark) 100%);
+    }
+    .roadmap-item {
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 32px; align-items: start;
+      padding: 48px 0; border-bottom: 1px solid var(--border-dark);
+    }
+    .roadmap-item:last-child { border-bottom: none; }
+    .roadmap-item__node {
+      position: relative; z-index: 1; width: 56px; height: 56px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .roadmap-item__node--live {
+      background: var(--gold-subtle); border: 2px solid var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+    .roadmap-item__node--dev { background: rgba(255,255,255,0.04); border: 2px solid var(--border-dark); }
+    .roadmap-item__node--future { background: rgba(255,255,255,0.02); border: 1px dashed var(--border-dark); }
+    .roadmap-item__phase-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 500; color: var(--text-light-muted); line-height: 1;
+    }
+    .roadmap-item__node--live .roadmap-item__phase-num { color: var(--gold); }
+    .roadmap-item__content { padding-top: 10px; }
+    .roadmap-item__phase-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-light-muted); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .roadmap-item__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 500;
+      color: var(--text-light); line-height: 1.1; margin-bottom: 16px;
+    }
+    .roadmap-item__desc { color: var(--text-light-muted); font-size: 0.95rem; line-height: 1.75; max-width: 560px; }
+    .roadmap-item__projects { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .roadmap-tag {
+      padding: 4px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 500;
+      border: 1px solid var(--border-dark); color: var(--text-light-muted);
+      background: rgba(255,255,255,0.03);
+    }
+    .roadmap-tag--live {
+      border-color: var(--border-gold); color: var(--gold-light); background: var(--gold-subtle);
+    }
+
+    /* ══════════ WHY ══════════ */
+    .why { background: var(--bg-ivory); padding: 128px 40px; }
+    .why__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 80px; }
+    .why-card {
+      padding: 32px; border: 1px solid var(--border-light);
+      border-radius: var(--radius-md); background: var(--bg-warm-white);
+      transition: border-color var(--ease), box-shadow var(--ease), transform var(--ease);
+    }
+    .why-card:hover { border-color: var(--border-gold); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+    .why-card__icon {
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      background: var(--gold-subtle); border: 1px solid var(--border-gold);
       display: flex; align-items: center; justify-content: center;
-      transition: background var(--transition), color var(--transition);
+      margin-bottom: 20px; font-size: 1.1rem;
     }
-    .card-action-btn:hover { background: var(--bg-input); color: var(--fg); }
-    .card-action-btn.delete:hover { border-color: #ef4444; color: #ef4444; }
+    .why-card__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem; font-weight: 500; color: var(--text-dark); margin-bottom: 8px;
+    }
+    .why-card__desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.75; }
 
-    .card-name { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
-    .card-desc { font-size: 0.8rem; color: var(--fg-muted); flex: 1; margin-bottom: 14px; line-height: 1.5; }
-    .card-footer { display: flex; align-items: center; justify-content: space-between; }
-    .card-port {
-      font-size: 0.75rem; font-family: 'SF Mono', 'Fira Code', monospace;
-      color: var(--fg-muted); background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); padding: 2px 8px;
-      border-radius: var(--radius-pill);
+    /* ══════════ CONTACT ══════════ */
+    .contact { background: var(--bg-charcoal-mid); padding: 128px 40px; text-align: center; }
+    .contact__inner { max-width: 680px; margin: 0 auto; }
+    .contact__overline {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px;
     }
-    .card-open-link {
-      font-size: 0.78rem; font-weight: 600;
-      color: var(--card-accent, var(--accent));
-      text-decoration: none;
-      display: flex; align-items: center; gap: 4px;
+    .contact__title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 3.5rem); font-weight: 500;
+      color: var(--text-light); line-height: 1.1; margin-bottom: 24px;
     }
-    .card-open-link::after { content: '→'; }
+    .contact__desc { color: var(--text-light-muted); font-size: 1.05rem; line-height: 1.75; margin-bottom: 48px; }
+    .contact__actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .contact__email {
+      display: block; margin-top: 32px; font-size: 0.875rem;
+      color: var(--text-light-muted); text-decoration: none; transition: color var(--ease);
+    }
+    .contact__email:hover { color: var(--gold); }
 
-    /* ── Add Service button + modal ── */
-    .add-btn {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--accent-soft); border: 1px dashed var(--accent-dim);
-      color: var(--accent); border-radius: var(--radius); padding: 22px;
-      font-size: 0.9rem; font-weight: 600; cursor: pointer;
-      transition: background var(--transition), border-color var(--transition);
-      justify-content: center;
+    /* ══════════ FOOTER ══════════ */
+    footer { background: var(--bg-charcoal); border-top: 1px solid var(--border-dark); padding: 40px; }
+    footer .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer__logo {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600;
+      color: var(--text-light); text-decoration: none; display: block; margin-bottom: 6px;
     }
-    .add-btn:hover { background: rgba(74,222,128,0.18); border-color: var(--accent); }
-    .add-btn-icon { font-size: 1.4rem; }
-
-    /* ── Modal overlay ── */
-    .modal-overlay {
-      position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 20px;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
-    }
-    .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal {
-      background: var(--bg-elevated); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 28px 28px 24px;
-      width: 100%; max-width: 420px;
-      transform: translateY(12px); transition: transform 0.2s;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.7);
-    }
-    .modal-overlay.open .modal { transform: translateY(0); }
-    .modal h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
-    .form-row { margin-bottom: 14px; }
-    .form-row label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--fg-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
-    .form-row input {
-      width: 100%; background: var(--bg-input); border: 1px solid var(--border);
-      color: var(--fg); border-radius: var(--radius-sm); padding: 9px 12px;
-      font-size: 0.9rem; outline: none;
-      transition: border-color var(--transition);
-    }
-    .form-row input:focus { border-color: var(--accent); }
-    .form-row-half { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .color-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-    .color-swatch {
-      width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
-      border: 2px solid transparent;
-      transition: transform var(--transition), border-color var(--transition);
-    }
-    .color-swatch:hover { transform: scale(1.15); }
-    .color-swatch.selected { border-color: var(--fg); transform: scale(1.15); }
-    .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
-    .btn-primary {
-      flex: 1; background: var(--accent); color: #000; border: none;
-      border-radius: var(--radius-pill); padding: 10px 20px;
-      font-size: 0.9rem; font-weight: 700; cursor: pointer;
-      transition: opacity var(--transition);
-    }
-    .btn-primary:hover { opacity: 0.85; }
-    .btn-secondary {
-      background: none; border: 1px solid var(--border); color: var(--fg-muted);
-      border-radius: var(--radius-pill); padding: 10px 20px;
-      font-size: 0.9rem; cursor: pointer;
-      transition: border-color var(--transition), color var(--transition);
-    }
-    .btn-secondary:hover { border-color: var(--border-hover); color: var(--fg); }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border); text-align: center;
-      padding: 24px; color: var(--fg-muted); font-size: 0.82rem;
+    .footer__logo span { color: var(--gold); }
+    .footer__tagline { font-size: 0.8rem; color: var(--text-light-muted); letter-spacing: 0.06em; }
+    .footer__nav { display: flex; gap: 40px; list-style: none; }
+    .footer__nav a { font-size: 0.85rem; color: var(--text-light-muted); text-decoration: none; transition: color var(--ease); }
+    .footer__nav a:hover { color: var(--gold); }
+    .footer__copy {
+      font-size: 0.78rem; color: rgba(184,173,156,0.4); width: 100%; text-align: center;
+      padding-top: 24px; border-top: 1px solid var(--border-dark); margin-top: 8px;
     }
 
-    /* ── Loading skeleton ── */
-    .skeleton {
-      background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-input) 50%, var(--bg-elevated) 75%);
-      background-size: 200% 100%; animation: shimmer 1.4s infinite;
-      border-radius: var(--radius); height: 160px;
-    }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    /* ── Scroll fade-in ── */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; }
 
-    @media (max-width: 480px) {
-      #cards-grid { grid-template-columns: 1fr; }
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      .pillars__grid { grid-template-columns: 1fr; max-width: 520px; margin-left: auto; margin-right: auto; }
+      .featured__inner { grid-template-columns: 1fr; gap: 48px; }
+      .studio-statement__inner { grid-template-columns: 1fr; gap: 48px; }
+      .why__grid { grid-template-columns: 1fr 1fr; }
+      footer .container { flex-direction: column; text-align: center; }
+      .footer__nav { justify-content: center; }
+      .nav__links li:nth-child(n+2) { display: none; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 0 24px; }
+      .nav { padding: 0 24px; }
+      .hero { padding: 100px 24px 96px; }
+      .studio-statement, .pillars, .featured, .roadmap, .why, .contact { padding: 80px 24px; }
+      footer { padding: 32px 24px; }
+      .why__grid { grid-template-columns: 1fr; }
+      .hero__actions { flex-direction: column; align-items: flex-start; }
+      .roadmap__track::before { left: 23px; }
+      .roadmap-item { grid-template-columns: 48px 1fr; gap: 20px; padding: 32px 0; }
+      .roadmap-item__node { width: 48px; height: 48px; }
+      .nav__links { display: none; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <a href="/" class="logo">The Lions <span>Alliance</span></a>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">The Lions <span>Alliance</span></a>
+      <ul class="nav__links">
+        <li><a href="#studio">Studio</a></li>
+        <li><a href="#pillars">Our Work</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="/wedding" class="nav__cta">WeddingCamBox</a>
     </div>
-  </header>
+  </nav>
 
-  <main>
-    <div class="container">
-      <div class="hero">
-        <span class="hero-badge">Raspberry Pi Dashboard</span>
-        <h1>Your <span class="accent">home server</span>,<br>all in one place.</h1>
-        <p>Access all running services directly from here.</p>
-        <div class="hero-divider"></div>
-      </div>
-
-      <div id="cards-grid">
-        <!-- skeletons while loading -->
-        <div class="skeleton"></div>
-        <div class="skeleton"></div>
-        <div class="skeleton"></div>
-      </div>
-
-      <!-- Add service card (always last) -->
-      <div style="margin-bottom: 48px;">
-        <button class="add-btn" id="open-add-modal">
-          <span class="add-btn-icon">＋</span>
-          Add Service
-        </button>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-grain" aria-hidden="true"></div>
+    <div class="hero__content" style="max-width:1160px;margin:0 auto;width:100%;">
+      <div class="hero__eyebrow">The Lions Alliance</div>
+      <h1 class="hero__title">
+        We craft experiences<br>
+        <em>worth remembering.</em>
+      </h1>
+      <p class="hero__subtitle">
+        A creative studio building story-driven moments, interactive experiences, and immersive worlds.
+        Phase one is live. The rest is being built with care.
+      </p>
+      <div class="hero__actions">
+        <a href="/wedding" class="btn btn--gold">
+          Explore WeddingCamBox
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#pillars" class="btn btn--ghost">View our roadmap</a>
       </div>
     </div>
-  </main>
+    <a href="#studio" class="hero__scroll" aria-label="Scroll to content">
+      <div class="hero__scroll-line"></div>
+      <span>Scroll</span>
+    </a>
+  </section>
 
-  <footer>
-    <div id="yr"></div>
-    <script>document.getElementById('yr').textContent = '© ' + new Date().getFullYear() + ' The Lions Alliance';</script>
-  </footer>
-
-  <!-- Add / Edit Modal -->
-  <div class="modal-overlay" id="modal-overlay">
-    <div class="modal">
-      <h2 id="modal-title">Add Service</h2>
-      <input type="hidden" id="edit-id" value="" />
-      <div class="form-row">
-        <label>Service Name</label>
-        <input type="text" id="field-name" placeholder="e.g. Food Tracker" maxlength="40" />
+  <!-- STUDIO STATEMENT -->
+  <section class="studio-statement" id="studio">
+    <div class="studio-statement__inner">
+      <div class="fade-in">
+        <span class="studio-statement__label">About the studio</span>
+        <h2 class="studio-statement__heading">
+          Building around three pillars
+        </h2>
+        <p class="studio-statement__text">
+          The Lions Alliance is a creative experience studio in deliberate development. We believe the most memorable experiences share three qualities: they are personal, interactive, and beautifully crafted.
+        </p>
+        <p class="studio-statement__text" style="margin-top:16px;">
+          Our work is structured across three pillars — each at a different stage. Phase one is live today. The next two are being built with the same care and conviction.
+        </p>
       </div>
-      <div class="form-row">
-        <label>Description <span style="font-weight:400;text-transform:none;">(optional)</span></label>
-        <input type="text" id="field-desc" placeholder="Short description" maxlength="80" />
-      </div>
-      <div class="form-row-half">
-        <div class="form-row" style="margin:0">
-          <label>Port</label>
-          <input type="number" id="field-port" placeholder="4242" min="1" max="65535" />
+      <div class="phase-list fade-in d1">
+        <div class="phase-item phase-item--active">
+          <div class="phase-item__num">01</div>
+          <div>
+            <div class="phase-item__label">Live now</div>
+            <div class="phase-item__name">Moments</div>
+          </div>
         </div>
-        <div class="form-row" style="margin:0">
-          <label>Icon (emoji)</label>
-          <input type="text" id="field-icon" placeholder="🔧" maxlength="4" />
+        <div class="phase-item">
+          <div class="phase-item__num">02</div>
+          <div>
+            <div class="phase-item__label">In development</div>
+            <div class="phase-item__name">Experiences</div>
+          </div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-item__num">03</div>
+          <div>
+            <div class="phase-item__label">Future vision</div>
+            <div class="phase-item__name">Immersive Worlds</div>
+          </div>
         </div>
       </div>
-      <div class="form-row">
-        <label>Accent Colour</label>
-        <div class="color-row" id="color-row"></div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" id="modal-cancel">Cancel</button>
-        <button class="btn-primary" id="modal-save">Save Service</button>
-      </div>
     </div>
-  </div>
+  </section>
 
-  <script>
-    const PALETTE = [
-      '#4ade80','#22c55e','#16a34a',
-      '#60a5fa','#3b82f6','#2563eb',
-      '#f472b6','#ec4899','#db2777',
-      '#fb923c','#f97316','#ea580c',
-      '#facc15','#eab308',
-      '#c084fc','#a855f7','#7c3aed',
-      '#94a3b8','#64748b',
-    ];
+  <!-- THREE PILLARS -->
+  <section class="pillars" id="pillars">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="overline">Three pillars</span>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:500;">What we&rsquo;re building</h2>
+        <p>Three connected pillars, each grounded in storytelling. One available now, two growing deliberately.</p>
+        <div class="divider"></div>
+      </div>
+      <div class="pillars__grid">
 
-    // ── State ──
-    let services = [];
-    let editingId = null;
-    let selectedColor = PALETTE[0];
-
-    // ── Fetch + render ──
-    async function loadServices() {
-      const res = await fetch('/api/services');
-      services = await res.json();
-      renderCards();
-    }
-
-    function renderCards() {
-      const grid = document.getElementById('cards-grid');
-      grid.innerHTML = '';
-      services.forEach(s => {
-        const card = document.createElement('div');
-        card.className = 'service-card';
-        card.style.setProperty('--card-accent', s.color || '#4ade80');
-        card.style.setProperty('--icon-bg', hexToSoft(s.color || '#4ade80'));
-
-        // Build the host URL using current hostname + port
-        const href = `http://${location.hostname}:${s.port}`;
-
-        card.innerHTML = `
-          <div class="card-top">
-            <div class="card-icon">${s.icon || '🔧'}</div>
-            <div class="card-actions">
-              <button class="card-action-btn" title="Edit" onclick="openEdit(${s.id}, event)">✎</button>
-              <button class="card-action-btn delete" title="Delete" onclick="deleteService(${s.id}, event)">✕</button>
+        <!-- Moments -->
+        <div class="pillar-card pillar-card--live fade-in">
+          <div class="pillar-card__badge"><span class="badge badge--live">Available Now</span></div>
+          <div class="pillar-card__number">01</div>
+          <h3 class="pillar-card__title">Moments</h3>
+          <div class="pillar-card__tagline">Intimate &middot; Meaningful &middot; Shareable</div>
+          <p class="pillar-card__desc">
+            Focused on the small-scale experiences that matter most — the kind that become stories people tell for years. Moments lives at the intersection of craft, emotion, and memorable design.
+          </p>
+          <div class="pillar-card__projects">
+            <div class="project-mention">
+              <span class="dot dot--live"></span>WeddingCamBox &mdash; Live
             </div>
           </div>
-          <div class="card-name">${escHtml(s.name)}</div>
-          <div class="card-desc">${escHtml(s.description || '')}</div>
-          <div class="card-footer">
-            <span class="card-port">:${s.port}</span>
-            <a class="card-open-link" href="${href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open</a>
-          </div>`;
+          <div class="pillar-card__cta">
+            <a href="/wedding" class="btn btn--primary btn--sm">Visit WeddingCamBox</a>
+          </div>
+        </div>
 
-        // Clicking the card body (not buttons) opens the link
-        card.addEventListener('click', () => window.open(href, '_blank', 'noopener'));
-        grid.appendChild(card);
+        <!-- Experiences -->
+        <div class="pillar-card fade-in d1">
+          <div class="pillar-card__badge"><span class="badge badge--dev">In Development</span></div>
+          <div class="pillar-card__number">02</div>
+          <h3 class="pillar-card__title">Experiences</h3>
+          <div class="pillar-card__tagline">Interactive &middot; Playful &middot; Story-Driven</div>
+          <p class="pillar-card__desc">
+            Puzzle routes, interactive installations, and narrative games designed for real places. Built for the curious — people who want to explore and leave with a sense of discovery.
+          </p>
+          <div class="pillar-card__projects">
+            <div class="project-mention">
+              <span class="dot dot--dev"></span>Puzzle Lanterns &mdash; Prototype
+            </div>
+          </div>
+          <div class="pillar-card__cta">
+            <a href="#roadmap" class="btn btn--outline btn--sm">See what&rsquo;s coming</a>
+          </div>
+        </div>
+
+        <!-- Immersive Worlds -->
+        <div class="pillar-card fade-in d2">
+          <div class="pillar-card__badge"><span class="badge badge--future">Future Vision</span></div>
+          <div class="pillar-card__number">03</div>
+          <h3 class="pillar-card__title">Immersive Worlds</h3>
+          <div class="pillar-card__tagline">Layered &middot; Spatial &middot; Unforgettable</div>
+          <p class="pillar-card__desc">
+            Large-scale, location-based storytelling for cities, castles, heritage sites, and historic routes. Experiences that transform a place into a living narrative — and stay with visitors long after they leave.
+          </p>
+          <div class="pillar-card__projects">
+            <div class="project-mention">
+              <span class="dot dot--future"></span>Concepts in development
+            </div>
+          </div>
+          <div class="pillar-card__cta">
+            <span class="btn btn--muted btn--sm" aria-disabled="true">The long horizon</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED OFFERING -->
+  <section class="featured" id="weddingcambox">
+    <div class="featured__inner">
+      <div class="featured__visual fade-in">
+        <div class="featured__visual-fill">
+          <span class="featured__visual-mark">WCB</span>
+        </div>
+        <div class="featured__tag"><span class="badge badge--live">Live Now</span></div>
+      </div>
+      <div class="fade-in d1">
+        <span class="featured__overline">Moments &mdash; Phase 1</span>
+        <h2 class="featured__title">WeddingCamBox</h2>
+        <p class="featured__desc">
+          Our first live offering under the Moments pillar. WeddingCamBox gives couples and guests a meaningful, personal, and shareable way to capture their wedding day — thoughtfully designed around the couple's story, not a template.
+        </p>
+        <div class="feature-points">
+          <div class="feature-point">Designed around the couple&rsquo;s story, not a template</div>
+          <div class="feature-point">Simple for guests of any age to use on the day</div>
+          <div class="feature-point">Produces something genuinely worth keeping</div>
+          <div class="feature-point">Available now &mdash; no waitlist</div>
+        </div>
+        <div class="featured__actions">
+          <a href="/wedding" class="btn btn--primary">Explore WeddingCamBox</a>
+          <a href="#contact" class="btn btn--outline">Get in touch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="roadmap" id="roadmap">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="overline">Studio roadmap</span>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:500;color:var(--text-light);">Where we&rsquo;re headed</h2>
+        <p>Every phase is built with the same intention: create something that earns its place in someone&rsquo;s memory.</p>
+        <div class="divider"></div>
+      </div>
+      <div class="roadmap__track">
+
+        <div class="roadmap-item fade-in">
+          <div class="roadmap-item__node roadmap-item__node--live">
+            <span class="roadmap-item__phase-num">I</span>
+          </div>
+          <div class="roadmap-item__content">
+            <div class="roadmap-item__phase-label">
+              Phase 1 &nbsp;<span class="badge badge--live" style="font-size:0.68rem;padding:2px 10px;">Live Now</span>
+            </div>
+            <h3 class="roadmap-item__title">Moments</h3>
+            <p class="roadmap-item__desc">
+              Intimate, personal, well-crafted experiences for individuals and small groups. The studio&rsquo;s first public offering — built slowly, finished properly, and available now.
+            </p>
+            <div class="roadmap-item__projects">
+              <span class="roadmap-tag roadmap-tag--live">WeddingCamBox</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-item fade-in d1">
+          <div class="roadmap-item__node roadmap-item__node--dev">
+            <span class="roadmap-item__phase-num">II</span>
+          </div>
+          <div class="roadmap-item__content">
+            <div class="roadmap-item__phase-label">
+              Phase 2 &nbsp;<span class="badge badge--dev" style="font-size:0.68rem;padding:2px 10px;">In Development</span>
+            </div>
+            <h3 class="roadmap-item__title" style="color:var(--text-light-muted);">Experiences</h3>
+            <p class="roadmap-item__desc">
+              Interactive, place-based experiences that reward curiosity. Puzzle routes, narrative installations, and real-world games for venues, events, and public spaces.
+            </p>
+            <div class="roadmap-item__projects">
+              <span class="roadmap-tag">Puzzle Lanterns &mdash; prototype</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-item fade-in d2">
+          <div class="roadmap-item__node roadmap-item__node--future">
+            <span class="roadmap-item__phase-num" style="color:rgba(184,173,156,0.4)">III</span>
+          </div>
+          <div class="roadmap-item__content">
+            <div class="roadmap-item__phase-label" style="color:rgba(184,173,156,0.4)">
+              Phase 3 &nbsp;<span class="badge badge--future" style="font-size:0.68rem;padding:2px 10px;">Future Vision</span>
+            </div>
+            <h3 class="roadmap-item__title" style="color:rgba(245,240,232,0.35);">Immersive Worlds</h3>
+            <p class="roadmap-item__desc" style="color:rgba(184,173,156,0.45);">
+              Ambitious, long-form location storytelling. Designed for cities, heritage locations, castles, and transport routes. The kind of work that takes years to do well &mdash; and is worth every one of them.
+            </p>
+            <div class="roadmap-item__projects">
+              <span class="roadmap-tag" style="opacity:0.4;">Concepts being explored</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY THE LIONS ALLIANCE -->
+  <section class="why" id="why">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="overline">Our approach</span>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:500;">Why The Lions Alliance</h2>
+        <p>We are not an agency. We are a studio &mdash; and that distinction shapes everything we build.</p>
+        <div class="divider"></div>
+      </div>
+      <div class="why__grid">
+        <div class="why-card fade-in">
+          <div class="why-card__icon">✦</div>
+          <h4 class="why-card__title">Story first</h4>
+          <p class="why-card__desc">Every project begins with a narrative question: what is the experience telling? Craft, design, and technology all serve that answer.</p>
+        </div>
+        <div class="why-card fade-in d1">
+          <div class="why-card__icon">◈</div>
+          <h4 class="why-card__title">Physical meets digital</h4>
+          <p class="why-card__desc">We blend what people can hold, scan, read, and share. The best experiences don&rsquo;t live only on a screen or only in a room &mdash; they move between both.</p>
+        </div>
+        <div class="why-card fade-in d2">
+          <div class="why-card__icon">◎</div>
+          <h4 class="why-card__title">Built with intention</h4>
+          <p class="why-card__desc">We build fewer things, more carefully. Each offering is released when it&rsquo;s ready &mdash; not when the calendar demands it.</p>
+        </div>
+        <div class="why-card fade-in">
+          <div class="why-card__icon">⟡</div>
+          <h4 class="why-card__title">Made to be remembered</h4>
+          <p class="why-card__desc">The measure of success is simple: did the experience stay with someone? That question drives every decision from concept to delivery.</p>
+        </div>
+        <div class="why-card fade-in d1">
+          <div class="why-card__icon">◇</div>
+          <h4 class="why-card__title">From intimate to immense</h4>
+          <p class="why-card__desc">The same thinking that shapes a wedding product can scale to a city-wide narrative. Our pillars differ in scale, not in standard.</p>
+        </div>
+        <div class="why-card fade-in d2">
+          <div class="why-card__icon">❋</div>
+          <h4 class="why-card__title">Long-term partners</h4>
+          <p class="why-card__desc">We are interested in lasting relationships with venues, organisations, and collaborators who believe that experience design is worth doing properly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <span class="contact__overline fade-in">Get in touch</span>
+      <h2 class="contact__title fade-in d1">Let&rsquo;s build something worth remembering</h2>
+      <p class="contact__desc fade-in d2">
+        Whether you&rsquo;re planning a wedding, running a venue, managing a heritage site, or simply curious about what we&rsquo;re building next &mdash; we&rsquo;d genuinely like to hear from you.
+      </p>
+      <div class="contact__actions fade-in d2">
+        <a href="/wedding" class="btn btn--gold">Explore WeddingCamBox</a>
+        <a href="mailto:hello@thelionsalliance.com" class="btn btn--ghost">Send us a message</a>
+      </div>
+      <a href="mailto:hello@thelionsalliance.com" class="contact__email fade-in d3">
+        hello@thelionsalliance.com
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer__brand">
+        <a href="/" class="footer__logo">The Lions <span>Alliance</span></a>
+        <span class="footer__tagline">A creative experience studio</span>
+      </div>
+      <ul class="footer__nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/wedding">WeddingCamBox</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="footer__copy">
+        &copy; <span id="footer-year"></span> The Lions Alliance. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
       });
-    }
-
-    function hexToSoft(hex) {
-      try {
-        const r = parseInt(hex.slice(1,3),16);
-        const g = parseInt(hex.slice(3,5),16);
-        const b = parseInt(hex.slice(5,7),16);
-        return `rgba(${r},${g},${b},0.14)`;
-      } catch { return 'rgba(74,222,128,0.12)'; }
-    }
-    function escHtml(s) {
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    // ── Modal ──
-    function buildColorRow(selected) {
-      const row = document.getElementById('color-row');
-      row.innerHTML = '';
-      PALETTE.forEach(c => {
-        const sw = document.createElement('div');
-        sw.className = 'color-swatch' + (c === selected ? ' selected' : '');
-        sw.style.background = c;
-        sw.title = c;
-        sw.addEventListener('click', () => {
-          selectedColor = c;
-          document.getElementById('field-icon').style.outlineColor = c;
-          row.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-          sw.classList.add('selected');
-        });
-        row.appendChild(sw);
-      });
-    }
-
-    function openModal(title, id, name, desc, port, icon, color) {
-      editingId = id ?? null;
-      selectedColor = color || PALETTE[0];
-      document.getElementById('modal-title').textContent = title;
-      document.getElementById('edit-id').value = id ?? '';
-      document.getElementById('field-name').value = name || '';
-      document.getElementById('field-desc').value = desc || '';
-      document.getElementById('field-port').value = port || '';
-      document.getElementById('field-icon').value = icon || '';
-      buildColorRow(selectedColor);
-      document.getElementById('modal-overlay').classList.add('open');
-      document.getElementById('field-name').focus();
-    }
-
-    function closeModal() {
-      document.getElementById('modal-overlay').classList.remove('open');
-      editingId = null;
-    }
-
-    document.getElementById('open-add-modal').addEventListener('click', () =>
-      openModal('Add Service', null, '', '', '', '🔧', PALETTE[0])
-    );
-    document.getElementById('modal-cancel').addEventListener('click', closeModal);
-    document.getElementById('modal-overlay').addEventListener('click', e => {
-      if (e.target === document.getElementById('modal-overlay')) closeModal();
-    });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-    function openEdit(id, e) {
-      e.stopPropagation();
-      const s = services.find(x => x.id === id);
-      if (!s) return;
-      openModal('Edit Service', s.id, s.name, s.description, s.port, s.icon, s.color);
-    }
-
-    document.getElementById('modal-save').addEventListener('click', async () => {
-      const name = document.getElementById('field-name').value.trim();
-      const port = Number(document.getElementById('field-port').value);
-      const icon = document.getElementById('field-icon').value.trim() || '🔧';
-      const description = document.getElementById('field-desc').value.trim();
-      const color = selectedColor;
-
-      if (!name || !port) {
-        document.getElementById('field-name').focus();
-        return;
-      }
-
-      const body = { name, port, icon, color, description };
-
-      if (editingId !== null) {
-        await fetch(`/api/services/${editingId}`, {
-          method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
-        });
-      } else {
-        await fetch('/api/services', {
-          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
-        });
-      }
-      closeModal();
-      loadServices();
-    });
-
-    async function deleteService(id, e) {
-      e.stopPropagation();
-      const s = services.find(x => x.id === id);
-      if (!s) return;
-      if (!confirm(`Remove "${s.name}" from the dashboard?`)) return;
-      await fetch(`/api/services/${id}`, { method: 'DELETE' });
-      loadServices();
-    }
-
-    // ── Init ──
-    loadServices();
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
