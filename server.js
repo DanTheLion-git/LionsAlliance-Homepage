@@ -9,6 +9,11 @@ const DATA_FILE = path.join(__dirname, 'data', 'services.json');
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Redirect /dashboard to the dashboard HTML
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
 // --- Persistence helpers ---
 
 function loadServices() {
@@ -27,10 +32,10 @@ function saveServices(services) {
 
 function getDefaultServices() {
   return [
-    { id: 1, name: 'Food Tracker',    port: 4242, icon: '🍎', color: '#16a34a', description: 'Grocery receipts, inventory & diet diary' },
-    { id: 2, name: 'Finance',         port: 3001, icon: '💰', color: '#2563eb', description: 'Budget tracking & expense overview' },
-    { id: 3, name: 'Jellyfin',        port: 8096, icon: '🎬', color: '#7c3aed', description: 'Media streaming server' },
-    { id: 4, name: 'Media Portal',    port: 5000, icon: '📥', color: '#dc2626', description: 'Download movies & series for local playback' },
+    { id: 1, name: 'Food Tracker',      port: 4242,  icon: '🍎', color: '#16a34a', description: 'Grocery receipts, inventory & diet diary' },
+    { id: 2, name: 'Finance',           port: 3001,  icon: '💰', color: '#2563eb', description: 'Budget tracking & expense overview' },
+    { id: 3, name: 'Jellyfin',          port: 8096,  icon: '🎬', color: '#7c3aed', description: 'Media streaming server' },
+    { id: 4, name: 'Media Portal',      port: 5000,  icon: '📥', color: '#dc2626', description: 'Download movies & series for local playback' },
     { id: 5, name: 'Audiobook Library', port: 13378, icon: '📚', color: '#d97706', description: 'Audiobook server' },
   ];
 }
@@ -69,10 +74,10 @@ app.put('/api/services/:id', (req, res) => {
   const { name, port, icon, color, description } = req.body;
   services[idx] = {
     ...services[idx],
-    ...(name !== undefined && { name: String(name).trim() }),
-    ...(port !== undefined && { port: Number(port) }),
-    ...(icon !== undefined && { icon }),
-    ...(color !== undefined && { color }),
+    ...(name        !== undefined && { name: String(name).trim() }),
+    ...(port        !== undefined && { port: Number(port) }),
+    ...(icon        !== undefined && { icon }),
+    ...(color       !== undefined && { color }),
     ...(description !== undefined && { description: String(description).trim() }),
   };
   saveServices(services);
@@ -88,7 +93,7 @@ app.delete('/api/services/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// Serve index for all other routes
+// All other routes → company homepage
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
